@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Hometask05</title>
+</head>
+<body>
+  <main>
+    <form class="calc" id="calc_body">
+      <p> Enter numbers: </p>
+      
+      <label> Start: 
+        <input type="number" class="calc__start" placeholder="For example: 3" />
+      </label>
+
+      <label> End: 
+        <input type="number" class="calc__end" placeholder="For example: 10" />
+      </label>
+
+      <input type="text" class="calc__result_input hidden" disabled/>
+      <div class="calc__messages hidden"></div>
+      <button type="button" class="calc__result_btn"> Calculate </button>
+      <button type="reset" class="calc__reset_btn hidden"> Reset form </button>
+  
+    </form>
+  </main>
+  
+  
+  <script src="./script.js"></script>
+</body>
+</html>
