@@ -2,91 +2,141 @@ const resultBtn = document.querySelector('.calc__result_btn');
 const resetBtn = document.querySelector('.calc__reset_btn');
 const result = document.querySelector('.calc__result_input');
 const messagesBlock = document.querySelector('.calc__messages');
+const cache = {};
 
-resultBtn.addEventListener('click', () => {
-  let min = document.querySelector(".calc__start").value;
-  let max = document.querySelector(".calc__end").value;
+
+const clearMessages = () => {
+  messagesBlock.innerHTML = '';
+  messagesBlock.classList.add('hidden');
+}
+
+resultBtn.onclick = () => {
+  let startInput = document.querySelector('.calc__start').value;
+  let endInput = document.querySelector('.calc__end').value;
   const minSafeNum = Number.MIN_SAFE_INTEGER;
   const maxSafeNum = Number.MAX_SAFE_INTEGER;
 
-  clearMessages();
-
-  if (min.length === 0 || max.length === 0) {
-    makeMessageVisible();
-    messagesBlock.innerHTML = `You need to fill in the Start and End fields`;
-
-    resetBtn.classList.remove("hidden");
-  } else if (isNotSafeNumber()) {
-    makeMessageVisible();
-    messagesBlock.innerHTML = `What is this crazy number? 
-    Let's try greater then ${minSafeNum} and less then ${maxSafeNum}.`;
-
-    resetBtn.classList.remove("hidden");
-  } else if (+min > +max) {
-    [min, max] = [max, min];
-
-    makeMessageVisible();
-    messagesBlock.innerHTML = `I have corrected your choice of numbers, but you'll 
-    be careful next time =) The starting number cannot be greater than the ending number.`;
-
-    memoRange();
-
-    resetBtn.classList.remove("hidden");
-  } else {
-    memoRange();
-  }
-
-  function memoRange() {
-    for (let key in localStorage) {
-      if (localStorage.hasOwnProperty(key)) {
-        result.value = localStorage.getItem(key);
-      } else {
-        result.value = range();
-        localStorage.setItem(`${min}, ${max}`, range());
-      }
+  const minValue = () => {
+    if (startInput === '') {
+      return null;
+    } else {
+      return +startInput;
     }
+  };
 
-    if (isCorrectResult()) {
-      makeMessageVisible();
-      messagesBlock.innerHTML = `Let's try using simpler numbers.`;
-
-      resetBtn.classList.remove("hidden");
+  const maxValue = () => {
+    if (endInput === '') {
+      return null;
+    } else {
+      return +endInput;
     }
+  };
 
-    resetBtn.classList.remove("hidden");
-  }
+  let min = minValue();
+  let max = maxValue();
 
-  function range() {
-    result.classList.remove("hidden");
-    return ((+min + +max) * (+max + 1 - +min)) / 2;
-  }
-
-  function makeMessageVisible() {
-    result.classList.add("hidden");
-    messagesBlock.classList.remove("hidden");
-  }
-
-  function isNotSafeNumber() {
+  const isNotSafeNumber = () => {
     return (
       max > maxSafeNum ||
       min < minSafeNum ||
       min > maxSafeNum ||
       max < minSafeNum
     );
-  }
+  };
 
-  function isCorrectResult() {
-    return result.value > maxSafeNum || result.value < minSafeNum;
-  }
-});
+  function range() {
+    result.classList.remove('hidden');
+    return ((min + max) * (max + 1 - min)) / 2;
+  };
 
-resetBtn.addEventListener('click', () => {
+  function makeMessageVisible() {
+    result.classList.add('hidden');
+    messagesBlock.classList.remove('hidden');
+  };
+
+  function showMessage(messageText) {
+    messagesBlock.innerHTML = messageText;
+  };
+
+  if (min > max) {
+    [min, max] = [max, min];
+
+    makeMessageVisible();
+    showMessage(`I have corrected your choice of numbers, but you'll 
+      be careful next time =) The starting number cannot be greater than the ending number.`);
+
+    result.classList.remove('hidden');
+    resetBtn.classList.remove('hidden');
+  };
+
+  if (min === null || max === null) {
+    makeMessageVisible();
+    showMessage(`You need to fill in the Start and End fields`);
+
+    result.classList.add('hidden');
+    resetBtn.classList.remove('hidden');
+    return;
+  };
+
+  if (isNotSafeNumber()) {
+    makeMessageVisible();
+    showMessage(`What is this crazy number? 
+    Let's try greater then ${minSafeNum} and less then ${maxSafeNum}.`);
+
+    result.classList.add('hidden');
+    resetBtn.classList.remove('hidden');
+    return;
+  };
+
+  if (
+    (!Number.isInteger(min) || !Number.isInteger(max)) &&
+    (typeof min === 'number' && typeof max === 'number')
+     ) {
+    makeMessageVisible();
+    showMessage(`Please, use only integer numbers.`);
+
+    result.classList.add('hidden');
+    resetBtn.classList.remove('hidden');
+    return;
+  };
+
+  function memoRange(f) {
+    result.classList.remove('hidden');
+    resetBtn.classList.remove('hidden');
+
+    return () => {
+      const key = `${min}, ${max}`;
+
+      if (cache[key]) {
+        console.log('from cache');
+        return cache[key];
+      };
+
+      const value = f();
+
+      if (value > maxSafeNum || value < minSafeNum) {
+
+        makeMessageVisible();
+        showMessage(`Let's try using simpler numbers.`);
+        result.classList.add('hidden');
+
+      } else {
+
+        console.log('calculated');
+        cache[key] = value;
+        return value;
+
+      };      
+    };
+
+  };
+
+    const cachedResult = memoRange(range);
+    result.value = cachedResult(min, max);
+};
+
+resetBtn.onclick = () => {
   clearMessages();
   result.classList.add('hidden');
   resetBtn.classList.add('hidden');
-});
-
-function clearMessages() {
-  messagesBlock.innerHTML = '';
-  messagesBlock.classList.add('hidden');
-}
+};
