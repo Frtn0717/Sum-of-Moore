@@ -11,29 +11,13 @@ const clearMessages = () => {
 }
 
 const calculate = () => {
-  let startInput = document.querySelector('.calc__start').value;
-  let endInput = document.querySelector('.calc__end').value;
+  const startInput = document.querySelector('.calc__start').value;
+  const endInput = document.querySelector('.calc__end').value;
   const minSafeNum = Number.MIN_SAFE_INTEGER;
   const maxSafeNum = Number.MAX_SAFE_INTEGER;
 
-  const minValue = () => {
-    if (startInput === '') {
-      return null;
-    } else {
-      return +startInput;
-    }
-  };
-
-  const maxValue = () => {
-    if (endInput === '') {
-      return null;
-    } else {
-      return +endInput;
-    }
-  };
-
-  let min = minValue();
-  let max = maxValue();
+  let min = startInput === '' ? null : Number(startInput);
+  let max = endInput === '' ? null : Number(endInput);
 
   const isNotSafeNumber = () => {
     return (
