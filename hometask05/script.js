@@ -33,19 +33,15 @@ const calculate = () => {
     return ((min + max) * (max + 1 - min)) / 2;
   };
 
-  function makeMessageVisible() {
+  function showMessage(messageText) {
     result.classList.add('hidden');
     messagesBlock.classList.remove('hidden');
-  };
-
-  function showMessage(messageText) {
     messagesBlock.innerHTML = messageText;
   };
 
   if (min > max) {
     [min, max] = [max, min];
 
-    makeMessageVisible();
     showMessage(`I have corrected your choice of numbers, but you'll 
       be careful next time =) The starting number cannot be greater than the ending number.`);
 
@@ -54,7 +50,6 @@ const calculate = () => {
   };
 
   if (min === null || max === null) {
-    makeMessageVisible();
     showMessage(`You need to fill in the Start and End fields`);
 
     result.classList.add('hidden');
@@ -63,7 +58,6 @@ const calculate = () => {
   };
 
   if (isNotSafeNumber()) {
-    makeMessageVisible();
     showMessage(`What is this crazy number? 
     Let's try greater then ${minSafeNum} and less then ${maxSafeNum}.`);
 
@@ -76,7 +70,6 @@ const calculate = () => {
     (!Number.isInteger(min) || !Number.isInteger(max)) &&
     (typeof min === 'number' && typeof max === 'number')
      ) {
-    makeMessageVisible();
     showMessage(`Please, use only integer numbers.`);
 
     result.classList.add('hidden');
@@ -100,7 +93,6 @@ const calculate = () => {
 
       if (value > maxSafeNum || value < minSafeNum) {
 
-        makeMessageVisible();
         showMessage(`Let's try using simpler numbers.`);
         result.classList.add('hidden');
 
