@@ -10,7 +10,7 @@ const clearMessages = () => {
   messagesBlock.classList.add('hidden');
 }
 
-resultBtn.onclick = () => {
+const calculate = () => {
   let startInput = document.querySelector('.calc__start').value;
   let endInput = document.querySelector('.calc__end').value;
   const minSafeNum = Number.MIN_SAFE_INTEGER;
@@ -135,7 +135,7 @@ resultBtn.onclick = () => {
     result.value = cachedResult(min, max);
 };
 
-resetBtn.onclick = () => {
+const resetForm = () => {
   clearMessages();
   result.classList.add('hidden');
   resetBtn.classList.add('hidden');
