@@ -2,13 +2,11 @@ const resultBtn = document.querySelector('.calc__result_btn');
 const resetBtn = document.querySelector('.calc__reset_btn');
 const result = document.querySelector('.calc__result_input');
 const messagesBlock = document.querySelector('.calc__messages');
-const cache = {};
-
 
 const clearMessages = () => {
   messagesBlock.innerHTML = '';
   messagesBlock.classList.add('hidden');
-}
+};
 
 const calculate = () => {
   const startInput = document.querySelector('.calc__start').value;
@@ -31,13 +29,13 @@ const calculate = () => {
   function range() {
     result.classList.remove('hidden');
     return ((min + max) * (max + 1 - min)) / 2;
-  };
+  }
 
   function showMessage(messageText) {
     result.classList.add('hidden');
     messagesBlock.classList.remove('hidden');
     messagesBlock.innerHTML = messageText;
-  };
+  }
 
   if (min > max) {
     [min, max] = [max, min];
@@ -47,7 +45,7 @@ const calculate = () => {
 
     result.classList.remove('hidden');
     resetBtn.classList.remove('hidden');
-  };
+  }
 
   if (min === null || max === null) {
     showMessage(`You need to fill in the Start and End fields`);
@@ -55,7 +53,7 @@ const calculate = () => {
     result.classList.add('hidden');
     resetBtn.classList.remove('hidden');
     return;
-  };
+  }
 
   if (isNotSafeNumber()) {
     showMessage(`What is this crazy number? 
@@ -64,22 +62,22 @@ const calculate = () => {
     result.classList.add('hidden');
     resetBtn.classList.remove('hidden');
     return;
-  };
+  }
 
   if (
     (!Number.isInteger(min) || !Number.isInteger(max)) &&
-    (typeof min === 'number' && typeof max === 'number')
-     ) {
+    typeof min === 'number' &&
+    typeof max === 'number'
+  ) {
     showMessage(`Please, use only integer numbers.`);
 
     result.classList.add('hidden');
     resetBtn.classList.remove('hidden');
     return;
-  };
+  }
 
   function memoRange(f) {
-    result.classList.remove('hidden');
-    resetBtn.classList.remove('hidden');
+    const cache = {};
 
     return () => {
       const key = `${min}, ${max}`;
@@ -87,28 +85,25 @@ const calculate = () => {
       if (cache[key]) {
         console.log('from cache');
         return cache[key];
-      };
+      }
 
       const value = f();
 
       if (value > maxSafeNum || value < minSafeNum) {
-
         showMessage(`Let's try using simpler numbers.`);
         result.classList.add('hidden');
-
       } else {
-
         console.log('calculated');
+
         cache[key] = value;
         return value;
-
-      };      
+      }
     };
+  }
 
-  };
-
-    const cachedResult = memoRange(range);
-    result.value = cachedResult(min, max);
+  const cachedResult = memoRange(range);
+  result.value = cachedResult();
+  resetBtn.classList.remove('hidden');
 };
 
 const resetForm = () => {
