@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+main {
+  margin: 20px;
+}
+
+main p {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin: 5px;
+}
+
+input {
+  width: 150px;
+}
+
+label > input {
+  -moz-appearance: textfield;
+}
+
+label > input::-webkit-outer-spin-button,
+label > input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.calc__result_btn {
+  margin: 10px;
+}
+
+.calc__result_input {
+  margin: 5px;
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.calc__messages {
+  width: 100%;
+}
